@@ -1,0 +1,13 @@
+<!-- This is a placeholder SVG for limited edition images -->
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#f3f4f6"/>
+  <rect x="50" y="50" width="300" height="300" fill="#e5e7eb" stroke="#d1d5db" stroke-width="2"/>
+  <circle cx="120" cy="120" r="15" fill="#9ca3af"/>
+  <polygon points="150,180 200,120 250,150 300,100 300,250 100,250" fill="#d1d5db"/>
+  <text x="200" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+    Limited Edition
+  </text>
+  <text x="200" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#9ca3af">
+    Upload your photo here
+  </text>
+</svg>
