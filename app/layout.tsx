@@ -10,7 +10,7 @@ import { CartProvider } from "@/context/cart-context"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Wildlife Photography",
+  title: "Narong Suwannarong - Photography",
   description: "Capturing the beauty of wildlife through the lens",
     generator: 'v0.dev'
 }
