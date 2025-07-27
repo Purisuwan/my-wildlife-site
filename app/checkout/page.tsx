@@ -4,11 +4,13 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useCart } from "@/context/cart-context"
 import { useToast } from "@/hooks/use-toast"
 
@@ -17,6 +19,7 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState("card")
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -46,7 +49,16 @@ export default function CheckoutPage() {
 
     try {
       const orderData = {
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Bangkok",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        }),
         type: "Store Order",
         orderId: `ORDER-${Date.now()}`,
         firstName: formData.firstName,
@@ -62,14 +74,16 @@ export default function CheckoutPage() {
         notes: formData.notes,
         items: state.items.map((item) => `${item.name} (Qty: ${item.quantity})`).join(", "),
         total: state.total,
-        cardNumber: `****-****-****-${formData.cardNumber.slice(-4)}`, // Only store last 4 digits
+        paymentMethod: paymentMethod,
+        cardNumber: paymentMethod === "card" ? `****-****-****-${formData.cardNumber.slice(-4)}` : "QR Code Payment", // Only store last 4 digits for card
       }
 
       // Send to Google Sheets
       const response = await fetch(
-        "https://docs.google.com/spreadsheets/d/1ByirNL-V8Ufaz1xU2-3p-wyWR8SDwH4S6YUxlbnxRJ0/edit",
+        "https://script.google.com/macros/s/AKfycbxf0GdVc6g8_45809Ja2BtOpZYvePEs8ndkXXjPTE8e30n5uYyzkOfSmffBIQ8GCls/exec",
         {
           method: "POST",
+          mode: "no-cors",
           headers: {
             "Content-Type": "application/json",
           },
@@ -302,46 +316,103 @@ export default function CheckoutPage() {
               <CardHeader>
                 <CardTitle>Payment</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
+                {/* Payment Method Selection */}
                 <div>
-                  <Label htmlFor="cardNumber">Card Number *</Label>
-                  <Input
-                    id="cardNumber"
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={handleInputChange}
-                    className="rounded-none"
-                    placeholder="1234 1234 1234 1234"
-                    required
-                  />
+                  <Label className="text-base font-medium">Payment Method</Label>
+                  <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="mt-2">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="card" id="card" />
+                      <Label htmlFor="card">Credit/Debit Card</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="qr" id="qr" />
+                      <Label htmlFor="qr">QR Code Payment</Label>
+                    </div>
+                  </RadioGroup>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="expiryDate">Expiry Date *</Label>
-                    <Input
-                      id="expiryDate"
-                      name="expiryDate"
-                      value={formData.expiryDate}
-                      onChange={handleInputChange}
-                      className="rounded-none"
-                      placeholder="MM/YY"
-                      required
-                    />
+                {/* Card Payment Form */}
+                {paymentMethod === "card" && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="cardNumber">Card Number *</Label>
+                      <Input
+                        id="cardNumber"
+                        name="cardNumber"
+                        value={formData.cardNumber}
+                        onChange={handleInputChange}
+                        className="rounded-none"
+                        placeholder="1234 1234 1234 1234"
+                        required={paymentMethod === "card"}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="expiryDate">Expiry Date *</Label>
+                        <Input
+                          id="expiryDate"
+                          name="expiryDate"
+                          value={formData.expiryDate}
+                          onChange={handleInputChange}
+                          className="rounded-none"
+                          placeholder="MM/YY"
+                          required={paymentMethod === "card"}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="cvv">CVV *</Label>
+                        <Input
+                          id="cvv"
+                          name="cvv"
+                          value={formData.cvv}
+                          onChange={handleInputChange}
+                          className="rounded-none"
+                          placeholder="123"
+                          required={paymentMethod === "card"}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="cvv">CVV *</Label>
-                    <Input
-                      id="cvv"
-                      name="cvv"
-                      value={formData.cvv}
-                      onChange={handleInputChange}
-                      className="rounded-none"
-                      placeholder="123"
-                      required
-                    />
+                )}
+
+                {/* QR Code Payment */}
+                {paymentMethod === "qr" && (
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <h3 className="text-lg font-medium mb-4">Scan QR Code to Pay</h3>
+                      <div className="flex justify-center mb-4">
+                        <Image
+                          src="/images/Payment/download.png"
+                          alt="QR Code for Payment"
+                          width={200}
+                          height={200}
+                          className="border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Scan this QR code with your mobile banking app or digital wallet
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Amount: US${state.total.toFixed(2)}
+                      </p>
+                    </div>
+                    
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-medium text-blue-900 mb-2">Payment Instructions:</h4>
+                      <ol className="text-sm text-blue-800 space-y-1">
+                        <li>1. Open your mobile banking app or digital wallet</li>
+                        <li>2. Select "Scan QR Code" or "QR Payment"</li>
+                        <li>3. Scan the QR code above</li>
+                        <li>4. Confirm the payment amount: US${state.total.toFixed(2)}</li>
+                        <li>5. Complete the payment in your app</li>
+                        <li>6. Click "Place Order" below after payment is complete</li>
+                        <li>7. After Place Order we will contact back as soon as possible to get your payment confirmation and give you delivery details</li>
+                      </ol>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <Button type="submit" className="w-full rounded-none" size="lg" disabled={isSubmitting}>
                   {isSubmitting ? "Processing..." : "Place Order"}

@@ -2,7 +2,7 @@
  * Google Sheets integration for Limited Edition products
  */
 
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTyaRU4DoK-iQJTrBGxVG5thCvMM_-KygFo-xZystMfNc-ftAvw4udPGudzZI99O1x1yBckFujNJWhz/pub?output=csv"
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6vQ1Nkw6vKo0G4FgIYtzJ4vHVgxwIFBlVOoVkJbgV0DwS0DzzFy462S0asTvNTbUbke4mOG66eoA6/pub?output=csv"
 
 export interface LimitedEditionProduct {
   id: string

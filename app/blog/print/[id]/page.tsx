@@ -101,7 +101,7 @@ export default function LimitedEditionPrintDetailPage() {
       console.log('Submitting data:', submissionData) // Debug log
 
       // Send to Google Sheets via Google Apps Script Web App
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwwMb8uwdWv4wKihLbeGAytrzV-hASMLrKe7EBJjBN9OuYP3r607lzLicpXmcV4ycU3/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzi9awm1eHkwWYLji-8SrI7etzGGXaNF2SAwwHiG5-s4cH3Bbg3fhBqNRSf33mSVON-iA/exec', {
         method: 'POST',
         mode: 'no-cors', // Add this to handle CORS issues
         headers: {

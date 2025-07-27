@@ -42,7 +42,7 @@ export default function ContactPage() {
       console.log('Submitting contact data:', submissionData)
 
       // Send to Google Sheets via Google Apps Script Web App
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwA9JNp9vhw6-vVRPTGGDkd0-nESSbD4u4mqQRgBAJI__kyxNxAyKU1Xsa3Tf72uxrfWA/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbwexKsRvS_OdgA_wwY7YRPpEhaESPDkfC3nkrdRFfhKUxiFLnNJ62mAF9VYYGrUTWqO/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {

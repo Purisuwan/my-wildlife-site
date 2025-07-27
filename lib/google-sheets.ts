@@ -103,13 +103,13 @@ export function convertSheetDataToProducts(sheetData: GoogleSheetProduct[]): Pro
 
 /**
  * Fetch data from Google Sheets CSV export
- * Your sheet: https://docs.google.com/spreadsheets/d/1JRe1c8DGR67b8z7GDifhCQN9OqwMSE0KTe_C8DG1Ues/edit?usp=sharing
+ * Your sheet: https://docs.google.com/spreadsheets/d/1g9BnlXJ8-LePOFRGGrOTi0v8B_6nKlVTGlPzbMUQ75I/edit?usp=sharing
  * Make sure it's shared publicly (Anyone with the link can view)
  */
 export async function fetchGoogleSheetData(): Promise<GoogleSheetProduct[]> {
   try {
     // Your Google Sheet ID
-    const SHEET_ID = "1JRe1c8DGR67b8z7GDifhCQN9OqwMSE0KTe_C8DG1Ues"
+    const SHEET_ID = "1g9BnlXJ8-LePOFRGGrOTi0v8B_6nKlVTGlPzbMUQ75I"
     const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`
     
     console.log('🔄 Fetching data from Google Sheets:', CSV_URL)

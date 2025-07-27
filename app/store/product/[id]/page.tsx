@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -13,6 +14,7 @@ export default function ProductDetailPage() {
   const router = useRouter()
   const { dispatch } = useCart()
   const { toast } = useToast()
+  const [quantity, setQuantity] = useState(1)
 
   const { product, loading, error } = useProduct(params.id as string)
 
@@ -56,10 +58,11 @@ export default function ProductDetailPage() {
         price: product.price,
         image: product.image,
       },
+      quantity: quantity,
     })
     toast({
       title: "Added to Cart",
-      description: `${product.name} has been added to your cart.`,
+      description: `${quantity} x ${product.name} has been added to your cart.`,
     })
   }
 
@@ -111,7 +114,8 @@ export default function ProductDetailPage() {
             <input
               type="number"
               min="1"
-              defaultValue="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
               className="w-16 rounded-none border border-border bg-background px-3 py-2 text-center"
             />
             <Button onClick={addToCart} className="rounded-none flex-1">
